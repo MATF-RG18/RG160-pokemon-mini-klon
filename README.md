@@ -11,3 +11,9 @@ v0.2
 - Ubacen igrac (kvadratic za sada) sa grid-based kretanjem (na klik nekog od wasd dugmeta pomera se 40unita u odgovarajucem smeru i ne moze da prima novi input tek kada je zavrsio kretanje.)
 - Escape za gasenje aplikacije
 - Pojavio se bag da se iscrtava neka fantomska linija od koordinata 0,0 (levo, dole) do trece kockice trave, nije ocigledno zasto, mozda OpenGL lose reaguje na 60fps iscrtavanja stvari u petlji
+
+v0.2.1
+- Mini update
+- Boja kockice promenjena
+- Igrac se crta posle svega, da bi bio najblizi kameri (2d igrica je pa nema potrebe baratati pozicijom na Z)
+- Ubacena fja za kontrolisanje specijalnog inputa koja omogucava kretanje i na strelice
