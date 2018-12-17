@@ -5,7 +5,7 @@
 #define LEFT 2
 #define RIGHT 3
 
-#define TIMER_INTERVAL 1000/60
+#define TIMER_INTERVAL 1000/60  // 1000ms = 1 sek, 1/60 = 60fps
 
 
 typedef struct PokemonField{
@@ -20,6 +20,7 @@ typedef struct Player{
 void render(void);
 void reshape(int,int);
 void on_keyboard(unsigned char key, int x, int y);
+void SpecialInput(int key, int x, int y);
 void Walk(int dir);
 
 void DrawGrass(int,int,int,int);
@@ -47,6 +48,7 @@ int main(int argc, char **argv)
     /* Registruju se callback funkcije. */
     glutDisplayFunc(render);
     glutKeyboardFunc(on_keyboard);
+    glutSpecialFunc(SpecialInput);
     
     glutReshapeFunc(reshape);
 
@@ -64,8 +66,8 @@ void render(void)
     /* Brise se prethodni sadrzaj 'prozora'. */
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
+    DrawGrass(wOrtho - 160, 0, 4, hOrtho/40);
     DrawPlayer();
-    DrawGrass(wOrtho - 4*40, 0, 4, hOrtho/40);
 
     /* Nova slika se salje na ekran. */
     glutSwapBuffers();
@@ -106,7 +108,7 @@ void DrawGrass(int xStart, int yStart, int columns, int rows){
 
 void DrawPlayer(){
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    glColor3f(0,1,0);
+    glColor3f(1,0,0);
     
     glBegin(GL_POLYGON);
         glVertex2i(p.xPos, p.yPos);
@@ -117,6 +119,55 @@ void DrawPlayer(){
     
 }
 
+
+/* Dupli kod, al mora ako zelim da kretanje moze i na strelice, posto nemaju ASCII vrednost (moze da se napravi 4 fja al to jos vise gomila stvari) */
+void SpecialInput(int key, int x, int y)
+{
+    switch(key)
+    {
+        case GLUT_KEY_UP:
+            /* Pokrece se Walk i direkcija je gore. */
+            if (!walking) {
+                p.yNewPos = p.yPos + 40;
+                if(p.yNewPos > 600-40)
+                    p.yNewPos = 600-40;
+                walking = 1;
+                glutTimerFunc(TIMER_INTERVAL, Walk, UP);
+            }
+            break;
+        case GLUT_KEY_DOWN:
+            /* Pokrece se Walk i direkcija je dole. */
+            if (!walking) {
+                p.yNewPos = p.yPos - 40;
+                if(p.yNewPos < 0)
+                    p.yNewPos = 0;
+                walking = 1;
+                glutTimerFunc(TIMER_INTERVAL, Walk, DOWN);
+            }
+            break;
+        case GLUT_KEY_LEFT:
+                /* Pokrece se Walk i direkcija je levo. */
+            if (!walking) {
+                p.xNewPos = p.xPos - 40;
+                if(p.xNewPos < 0)
+                    p.xNewPos = 0;
+                walking = 1;
+                glutTimerFunc(TIMER_INTERVAL, Walk, LEFT);
+            }
+            break;
+        case GLUT_KEY_RIGHT:
+            /* Pokrece se Walk i direkcija je desno. */
+            if (!walking) {
+                p.xNewPos = p.xPos + 40;
+                if(p.xNewPos > 800-40)
+                    p.xNewPos = 800-40;
+                walking = 1;
+                glutTimerFunc(TIMER_INTERVAL, Walk, RIGHT);
+            }
+            break;
+    }
+}
+
 void on_keyboard(unsigned char key, int x, int y)
 {
     switch (key) {
@@ -125,7 +176,6 @@ void on_keyboard(unsigned char key, int x, int y)
         exit(0);
         break;
 
-    case 'W':
     case 'w':
         /* Pokrece se Walk i direkcija je gore. */
         if (!walking) {
@@ -138,7 +188,6 @@ void on_keyboard(unsigned char key, int x, int y)
         break;
 
     case 's':
-    case 'S':
         /* Pokrece se Walk i direkcija je dole. */
         if (!walking) {
             p.yNewPos = p.yPos - 40;
@@ -150,7 +199,6 @@ void on_keyboard(unsigned char key, int x, int y)
         break;
         
     case 'a':
-    case 'A':
         /* Pokrece se Walk i direkcija je levo. */
         if (!walking) {
             p.xNewPos = p.xPos - 40;
@@ -162,7 +210,6 @@ void on_keyboard(unsigned char key, int x, int y)
         break;
         
     case 'd':
-    case 'D':
         /* Pokrece se Walk i direkcija je desno. */
         if (!walking) {
             p.xNewPos = p.xPos + 40;
@@ -212,6 +259,10 @@ void Walk(int dir)
     /* Provera da li je igrac stigao do kranje lokacije */
     if (walking) {
         glutTimerFunc(TIMER_INTERVAL, Walk, dir);
+    }else{
+        
+        //TODO: Provera dal je u PokemonField-u, i ako jeste random sansa za encounter sa random pokemonom
+        
     }
 }
 
