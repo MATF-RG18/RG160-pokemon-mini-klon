@@ -1,31 +1,52 @@
 #include <GL/glut.h>
 
+#define UP 0
+#define DOWN 1
+#define LEFT 2
+#define RIGHT 3
+
+#define TIMER_INTERVAL 1000/60
+
+
 typedef struct PokemonField{
     int xBegin,xEnd,yBegin,yEnd;
 }PokemonField;
 
+typedef struct Player{
+    int xPos, yPos, dir, xNewPos, yNewPos;
+} Player;
+
 /* Deklaracije callback funkcija. */
 void render(void);
 void reshape(int,int);
-void DrawGrass();
+void on_keyboard(unsigned char key, int x, int y);
+void Walk(int dir);
+
+void DrawGrass(int,int,int,int);
+void DrawPlayer();
 
 int wOrtho = 800, hOrtho = 600;
 PokemonField pf;
-
+Player p;
+int walking = 0;
 
 int main(int argc, char **argv)
 {
+    p.xPos = wOrtho/2;
+    p.yPos = hOrtho/2-20;
+    p.dir = DOWN;
+    
     /* Inicijalizuje se GLUT. */
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DEPTH | GLUT_RGB | GLUT_DOUBLE);
-
     /* Kreira se prozor. */
     glutInitWindowSize(800, 600);
     glutInitWindowPosition(100, 100);
     glutCreateWindow(argv[0]);
-
+    
     /* Registruju se callback funkcije. */
     glutDisplayFunc(render);
+    glutKeyboardFunc(on_keyboard);
     
     glutReshapeFunc(reshape);
 
@@ -42,7 +63,8 @@ void render(void)
 {
     /* Brise se prethodni sadrzaj 'prozora'. */
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+    
+    DrawPlayer();
     DrawGrass(wOrtho - 4*40, 0, 4, hOrtho/40);
 
     /* Nova slika se salje na ekran. */
@@ -82,7 +104,116 @@ void DrawGrass(int xStart, int yStart, int columns, int rows){
     pf.yEnd = yStart + 40*rows;
 }
 
+void DrawPlayer(){
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glColor3f(0,1,0);
+    
+    glBegin(GL_POLYGON);
+        glVertex2i(p.xPos, p.yPos);
+        glVertex2i(p.xPos+40, p.yPos);
+        glVertex2i(p.xPos+40, p.yPos+40);
+        glVertex2i(p.xPos, p.yPos+40);
+    glEnd();
+    
+}
 
+void on_keyboard(unsigned char key, int x, int y)
+{
+    switch (key) {
+    case 27:
+        /* Zavrsava se program. */
+        exit(0);
+        break;
+
+    case 'W':
+    case 'w':
+        /* Pokrece se Walk i direkcija je gore. */
+        if (!walking) {
+            p.yNewPos = p.yPos + 40;
+            if(p.yNewPos > 600-40)
+                p.yNewPos = 600-40;
+            walking = 1;
+            glutTimerFunc(TIMER_INTERVAL, Walk, UP);
+        }
+        break;
+
+    case 's':
+    case 'S':
+        /* Pokrece se Walk i direkcija je dole. */
+        if (!walking) {
+            p.yNewPos = p.yPos - 40;
+            if(p.yNewPos < 0)
+                p.yNewPos = 0;
+            walking = 1;
+            glutTimerFunc(TIMER_INTERVAL, Walk, DOWN);
+        }
+        break;
+        
+    case 'a':
+    case 'A':
+        /* Pokrece se Walk i direkcija je levo. */
+        if (!walking) {
+            p.xNewPos = p.xPos - 40;
+            if(p.xNewPos < 0)
+                p.xNewPos = 0;
+            walking = 1;
+            glutTimerFunc(TIMER_INTERVAL, Walk, LEFT);
+        }
+        break;
+        
+    case 'd':
+    case 'D':
+        /* Pokrece se Walk i direkcija je desno. */
+        if (!walking) {
+            p.xNewPos = p.xPos + 40;
+            if(p.xNewPos > 800-40)
+                p.xNewPos = 800-40;
+            walking = 1;
+            glutTimerFunc(TIMER_INTERVAL, Walk, RIGHT);
+        }
+        break;
+    }
+}
+
+void Walk(int dir)
+{
+    
+    switch(dir){
+        case UP:
+            if(p.yPos == p.yNewPos)
+                walking = 0;
+            else
+                p.yPos += 4;
+            break;
+        case DOWN:
+            if(p.yPos == p.yNewPos)
+                walking = 0;
+            else
+                p.yPos -= 4;
+            break;
+        case LEFT:
+            if(p.xPos == p.xNewPos)
+                walking = 0;
+            else
+                p.xPos -= 4;
+            break;
+        case RIGHT:
+            if(p.xPos == p.xNewPos)
+                walking = 0;
+            else
+                p.xPos += 4;
+            break;
+        
+    }
+    
+    /* Forsira se ponovno iscrtavanje prozora. */
+    glutPostRedisplay();
+    
+    /* Provera da li je igrac stigao do kranje lokacije */
+    if (walking) {
+        glutTimerFunc(TIMER_INTERVAL, Walk, dir);
+    }
+}
 
 
 
