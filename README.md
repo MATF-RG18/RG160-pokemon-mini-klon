@@ -17,3 +17,7 @@ v0.2.1
 - Boja kockice promenjena
 - Igrac se crta posle svega, da bi bio najblizi kameri (2d igrica je pa nema potrebe baratati pozicijom na Z)
 - Ubacena fja za kontrolisanje specijalnog inputa koja omogucava kretanje i na strelice
+
+v0.2.2
+- Popravljen bag pojavljivanja fantomske linije zamenjivanjem GL_POLYGON crtanja sa GL_QUADS crtanjem, iako ne bi smelo to da pravi ikakvu razliku.
+- Promenjen naziv windowa u ime igrice
