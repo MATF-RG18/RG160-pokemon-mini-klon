@@ -43,7 +43,7 @@ int main(int argc, char **argv)
     /* Kreira se prozor. */
     glutInitWindowSize(800, 600);
     glutInitWindowPosition(100, 100);
-    glutCreateWindow(argv[0]);
+    glutCreateWindow("Pokemon Banana Blue");
     
     /* Registruju se callback funkcije. */
     glutDisplayFunc(render);
@@ -91,7 +91,7 @@ void DrawGrass(int xStart, int yStart, int columns, int rows){
     {
         for(j = 0; j < rows; j++)
         {
-            glBegin(GL_POLYGON);
+            glBegin(GL_QUADS);
                 glVertex2i(xStart + i*40, yStart + j*40);
                 glVertex2i(xStart + 40 + i*40, yStart + j*40);
                 glVertex2i(xStart + 40 + i*40, yStart + 40 + j*40);

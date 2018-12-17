@@ -1,4 +1,4 @@
-PROGRAM   = graf
+PROGRAM   = Pokemon
 CC        = gcc
 CFLAGS    = -g -Wall
 LDFLAGS   = -lGL -lGLU -lglut
