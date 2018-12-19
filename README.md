@@ -36,3 +36,13 @@ v0.3.1
 v0.3.2
 - Poboljsana kolizija sa krajem mape
 - Popravljen bag gde se proveravalo dal je igrac u PokemonField-u bez kretanja ako je igrac na ivicama ekrana (sad ne ulazi u hodanje uopste ako je to slucaj, tako da ne dolazi ni do provere kad se hodanje zavrsi)
+
+
+TODO:
+- Importovanje spritova za igraca, travu, pokemone
+- Borba, drugacije iscrtavanje za borbu, graficko predstavljanje pokemona u borbi i njihovih statova (Ime,helti,exp,level)
+- Promena trenutnog pokemona koj se koristi za nekog od uhvacenih
+- Pecanje (tu se dodaje onda jos pokemona)
+- Pokecentar za lecenje pokemona
+- Balansiranje i menjanje statova za svakog pokemona ponaosob (za sad se statovi razlikuju samo po retkosti pokemona) (mozda skidanje formula sa bulbapedije, sajta sa svim informacijama o pokemon igricama)
+- Zvukovi
