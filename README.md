@@ -21,3 +21,10 @@ v0.2.1
 v0.2.2
 - Popravljen bag pojavljivanja fantomske linije zamenjivanjem GL_POLYGON crtanja sa GL_QUADS crtanjem, iako ne bi smelo to da pravi ikakvu razliku.
 - Promenjen naziv windowa u ime igrice
+
+v0.3
+- Napravljena klasa (ne bas posto je C) Pokemon
+- 32 Pokemona ubacena u igricu raspodeljenih po vrednosti (Common, Uncommon, Rare, Legendary)
+- Napravljene funkcije za napad pokemona, generisanje random pokemona (Legendary 1%, rare 9%, Uncommon 20%, Common 70%), proveru dal je objekat u PokemonField promenljivoj (poziva se na kraju hodanja igraca)
+- Leveling sistem Pokemona i njihovi statovi u odnosu na sam level
+- Sekcija za testiranje napravljenih funkcija u inicijalizaciji programa, ispis u konzoli funkcionalan trenutno
