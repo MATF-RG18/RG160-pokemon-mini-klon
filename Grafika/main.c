@@ -207,9 +207,9 @@ void on_keyboard(unsigned char key, int x, int y)
     case 'w':
         /* Pokrece se Walk i direkcija je gore. */
         if (!walking) {
+            if(player.yPos == 600-40)
+                break;
             player.yNewPos = player.yPos + 40;
-            if(player.yNewPos > 600-40)
-                player.yNewPos = 600-40;
             walking = 1;
             glutTimerFunc(TIMER_INTERVAL, Walk, UP);
         }
@@ -218,9 +218,9 @@ void on_keyboard(unsigned char key, int x, int y)
     case 's':
         /* Pokrece se Walk i direkcija je dole. */
         if (!walking) {
+            if(player.yPos == 0)
+                break;
             player.yNewPos = player.yPos - 40;
-            if(player.yNewPos < 0)
-                player.yNewPos = 0;
             walking = 1;
             glutTimerFunc(TIMER_INTERVAL, Walk, DOWN);
         }
@@ -229,9 +229,9 @@ void on_keyboard(unsigned char key, int x, int y)
     case 'a':
         /* Pokrece se Walk i direkcija je levo. */
         if (!walking) {
+            if(player.xPos == 0)
+                break;
             player.xNewPos = player.xPos - 40;
-            if(player.xNewPos < 0)
-                player.xNewPos = 0;
             walking = 1;
             glutTimerFunc(TIMER_INTERVAL, Walk, LEFT);
         }
@@ -240,9 +240,9 @@ void on_keyboard(unsigned char key, int x, int y)
     case 'd':
         /* Pokrece se Walk i direkcija je desno. */
         if (!walking) {
+            if(player.xPos == 800-40)
+                break;
             player.xNewPos = player.xPos + 40;
-            if(player.xNewPos > 800-40)
-                player.xNewPos = 800-40;
             walking = 1;
             glutTimerFunc(TIMER_INTERVAL, Walk, RIGHT);
         }
