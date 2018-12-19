@@ -3,8 +3,8 @@ CC        = gcc
 CFLAGS    = -g -Wall
 LDFLAGS   = -lGL -lGLU -lglut
 
-$(PROGRAM): main.o
-	$(CC) -o $(PROGRAM) main.o $(LDFLAGS)
+$(PROGRAM): main.o pokemon.o
+	$(CC) -o $(PROGRAM) pokemon.o main.o $(LDFLAGS)
 
 .PHONY: clean dist
 

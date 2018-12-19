@@ -1,9 +1,15 @@
 #include <GL/glut.h>
+#include "pokemon.h"
+#include <stdio.h>
+#include <time.h>
 
 #define UP 0
 #define DOWN 1
 #define LEFT 2
 #define RIGHT 3
+
+#define false 0
+#define true 1
 
 #define TIMER_INTERVAL 1000/60  // 1000ms = 1 sek, 1/60 = 60fps
 
@@ -14,6 +20,7 @@ typedef struct PokemonField{
 
 typedef struct Player{
     int xPos, yPos, dir, xNewPos, yNewPos;
+    Pokemon playerPokemon;
 } Player;
 
 /* Deklaracije callback funkcija. */
@@ -28,14 +35,29 @@ void DrawPlayer();
 
 int wOrtho = 800, hOrtho = 600;
 PokemonField pf;
-Player p;
+Player player;
 int walking = 0;
 
 int main(int argc, char **argv)
 {
-    p.xPos = wOrtho/2;
-    p.yPos = hOrtho/2-20;
-    p.dir = DOWN;
+    /* Random seed generalizujemo */
+    srand(time(NULL));
+    
+    player.xPos = wOrtho/2;
+    player.yPos = hOrtho/2-20;
+    player.dir = DOWN;
+    player.playerPokemon = MakeStarterPokemon();
+    
+    /* Testiranje */
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    printf("----STARTER POKEMON----\nNAME: %s\nLVL: %d\nHP: %d\nA: %d\nD: %d\n-----------------------\n", player.playerPokemon.name, player.playerPokemon.level, player.playerPokemon.healthMax, player.playerPokemon.attack, player.playerPokemon.defence);
+    
+    Pokemon x = GetRandomPokemon(player.playerPokemon.level);
+    printf("NAME: %s\nLVL: %d\nHP: %d\nA: %d\nD: %d\n", x.name, x.level, x.healthMax, x.attack, x.defence);
+    
+    LevelUp(&player.playerPokemon);
+    printf("----STARTER POKEMON----\nNAME: %s\nLVL: %d\nHP: %d\nA: %d\nD: %d\n-----------------------\n", player.playerPokemon.name, player.playerPokemon.level, player.playerPokemon.healthMax, player.playerPokemon.attack, player.playerPokemon.defence);
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
     /* Inicijalizuje se GLUT. */
     glutInit(&argc, argv);
@@ -111,14 +133,20 @@ void DrawPlayer(){
     glColor3f(1,0,0);
     
     glBegin(GL_POLYGON);
-        glVertex2i(p.xPos, p.yPos);
-        glVertex2i(p.xPos+40, p.yPos);
-        glVertex2i(p.xPos+40, p.yPos+40);
-        glVertex2i(p.xPos, p.yPos+40);
+        glVertex2i(player.xPos, player.yPos);
+        glVertex2i(player.xPos+40, player.yPos);
+        glVertex2i(player.xPos+40, player.yPos+40);
+        glVertex2i(player.xPos, player.yPos+40);
     glEnd();
     
 }
 
+int InPokemonField(Player p){
+    if( (p.xPos >= pf.xBegin && p.xPos < pf.xEnd) && (p.yPos >= pf.yBegin && p.yPos < pf.yEnd ) )
+        return true;
+    else
+        return false;
+}
 
 /* Dupli kod, al mora ako zelim da kretanje moze i na strelice, posto nemaju ASCII vrednost (moze da se napravi 4 fja al to jos vise gomila stvari) */
 void SpecialInput(int key, int x, int y)
@@ -128,9 +156,9 @@ void SpecialInput(int key, int x, int y)
         case GLUT_KEY_UP:
             /* Pokrece se Walk i direkcija je gore. */
             if (!walking) {
-                p.yNewPos = p.yPos + 40;
-                if(p.yNewPos > 600-40)
-                    p.yNewPos = 600-40;
+                player.yNewPos = player.yPos + 40;
+                if(player.yNewPos > 600-40)
+                    player.yNewPos = 600-40;
                 walking = 1;
                 glutTimerFunc(TIMER_INTERVAL, Walk, UP);
             }
@@ -138,9 +166,9 @@ void SpecialInput(int key, int x, int y)
         case GLUT_KEY_DOWN:
             /* Pokrece se Walk i direkcija je dole. */
             if (!walking) {
-                p.yNewPos = p.yPos - 40;
-                if(p.yNewPos < 0)
-                    p.yNewPos = 0;
+                player.yNewPos = player.yPos - 40;
+                if(player.yNewPos < 0)
+                    player.yNewPos = 0;
                 walking = 1;
                 glutTimerFunc(TIMER_INTERVAL, Walk, DOWN);
             }
@@ -148,9 +176,9 @@ void SpecialInput(int key, int x, int y)
         case GLUT_KEY_LEFT:
                 /* Pokrece se Walk i direkcija je levo. */
             if (!walking) {
-                p.xNewPos = p.xPos - 40;
-                if(p.xNewPos < 0)
-                    p.xNewPos = 0;
+                player.xNewPos = player.xPos - 40;
+                if(player.xNewPos < 0)
+                    player.xNewPos = 0;
                 walking = 1;
                 glutTimerFunc(TIMER_INTERVAL, Walk, LEFT);
             }
@@ -158,9 +186,9 @@ void SpecialInput(int key, int x, int y)
         case GLUT_KEY_RIGHT:
             /* Pokrece se Walk i direkcija je desno. */
             if (!walking) {
-                p.xNewPos = p.xPos + 40;
-                if(p.xNewPos > 800-40)
-                    p.xNewPos = 800-40;
+                player.xNewPos = player.xPos + 40;
+                if(player.xNewPos > 800-40)
+                    player.xNewPos = 800-40;
                 walking = 1;
                 glutTimerFunc(TIMER_INTERVAL, Walk, RIGHT);
             }
@@ -179,9 +207,9 @@ void on_keyboard(unsigned char key, int x, int y)
     case 'w':
         /* Pokrece se Walk i direkcija je gore. */
         if (!walking) {
-            p.yNewPos = p.yPos + 40;
-            if(p.yNewPos > 600-40)
-                p.yNewPos = 600-40;
+            player.yNewPos = player.yPos + 40;
+            if(player.yNewPos > 600-40)
+                player.yNewPos = 600-40;
             walking = 1;
             glutTimerFunc(TIMER_INTERVAL, Walk, UP);
         }
@@ -190,9 +218,9 @@ void on_keyboard(unsigned char key, int x, int y)
     case 's':
         /* Pokrece se Walk i direkcija je dole. */
         if (!walking) {
-            p.yNewPos = p.yPos - 40;
-            if(p.yNewPos < 0)
-                p.yNewPos = 0;
+            player.yNewPos = player.yPos - 40;
+            if(player.yNewPos < 0)
+                player.yNewPos = 0;
             walking = 1;
             glutTimerFunc(TIMER_INTERVAL, Walk, DOWN);
         }
@@ -201,9 +229,9 @@ void on_keyboard(unsigned char key, int x, int y)
     case 'a':
         /* Pokrece se Walk i direkcija je levo. */
         if (!walking) {
-            p.xNewPos = p.xPos - 40;
-            if(p.xNewPos < 0)
-                p.xNewPos = 0;
+            player.xNewPos = player.xPos - 40;
+            if(player.xNewPos < 0)
+                player.xNewPos = 0;
             walking = 1;
             glutTimerFunc(TIMER_INTERVAL, Walk, LEFT);
         }
@@ -212,9 +240,9 @@ void on_keyboard(unsigned char key, int x, int y)
     case 'd':
         /* Pokrece se Walk i direkcija je desno. */
         if (!walking) {
-            p.xNewPos = p.xPos + 40;
-            if(p.xNewPos > 800-40)
-                p.xNewPos = 800-40;
+            player.xNewPos = player.xPos + 40;
+            if(player.xNewPos > 800-40)
+                player.xNewPos = 800-40;
             walking = 1;
             glutTimerFunc(TIMER_INTERVAL, Walk, RIGHT);
         }
@@ -227,28 +255,28 @@ void Walk(int dir)
     
     switch(dir){
         case UP:
-            if(p.yPos == p.yNewPos)
+            if(player.yPos == player.yNewPos)
                 walking = 0;
             else
-                p.yPos += 4;
+                player.yPos += 4;
             break;
         case DOWN:
-            if(p.yPos == p.yNewPos)
+            if(player.yPos == player.yNewPos)
                 walking = 0;
             else
-                p.yPos -= 4;
+                player.yPos -= 4;
             break;
         case LEFT:
-            if(p.xPos == p.xNewPos)
+            if(player.xPos == player.xNewPos)
                 walking = 0;
             else
-                p.xPos -= 4;
+                player.xPos -= 4;
             break;
         case RIGHT:
-            if(p.xPos == p.xNewPos)
+            if(player.xPos == player.xNewPos)
                 walking = 0;
             else
-                p.xPos += 4;
+                player.xPos += 4;
             break;
         
     }
@@ -260,9 +288,12 @@ void Walk(int dir)
     if (walking) {
         glutTimerFunc(TIMER_INTERVAL, Walk, dir);
     }else{
+        /* Provera dal je u PokemonField-u */
+        printf("%d\n",InPokemonField(player));
         
-        //TODO: Provera dal je u PokemonField-u, i ako jeste random sansa za encounter sa random pokemonom
-        
+        if(InPokemonField(player) == true){
+            // TODO: Random sansa za random encounter
+        }
     }
 }
 
