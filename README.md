@@ -32,3 +32,7 @@ v0.3
 v0.3.1
 - Funkcija za printovanje statova pokemona na standardni izlaz (bice pretvorena u iscrtavanje informacija o pokemonu kada dodjem do grafickog predstavljanja borbe)
 - Dodata promenljiva koja pokazuje retkost pokemona
+
+v0.3.2
+- Poboljsana kolizija sa krajem mape
+- Popravljen bag gde se proveravalo dal je igrac u PokemonField-u bez kretanja ako je igrac na ivicama ekrana (sad ne ulazi u hodanje uopste ako je to slucaj, tako da ne dolazi ni do provere kad se hodanje zavrsi)
