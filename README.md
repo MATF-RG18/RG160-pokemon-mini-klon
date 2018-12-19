@@ -46,3 +46,4 @@ TODO:
 - Pokecentar za lecenje pokemona
 - Balansiranje i menjanje statova za svakog pokemona ponaosob (za sad se statovi razlikuju samo po retkosti pokemona) (mozda skidanje formula sa bulbapedije, sajta sa svim informacijama o pokemon igricama)
 - Zvukovi
+- Evolucije(?)
