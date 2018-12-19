@@ -1,5 +1,6 @@
 typedef struct Pokemon{
     int attack, defence, health, healthMax, level, exp, expWorth, expMax, catchChancePercent;
+    char rarity;
     char* name;
 }Pokemon;
 
@@ -13,3 +14,4 @@ Pokemon GetRandomCommonPokemon(int);
 Pokemon GetRandomUncommonPokemon(int);
 Pokemon GetRandomRarePokemon(int);
 Pokemon GetRandomLegendaryPokemon(int);
+void PrintPokemon(Pokemon p);

@@ -82,6 +82,7 @@ Pokemon MakeStarterPokemon(){
     p.defence = 2 + p.level * 2.2;
     p.exp = 0;
     p.expMax = 100;
+    p.rarity = 'S';
     return p;
 }
 
@@ -163,6 +164,7 @@ Pokemon GetRandomLegendaryPokemon(int playerPokemonLevel){
             break;
     }
     p.catchChancePercent = 5;
+    p.rarity = 'L';
     
     return p;
 }
@@ -255,6 +257,7 @@ Pokemon GetRandomRarePokemon(int playerPokemonLevel){
             break;
     }
     p.catchChancePercent = 20;
+    p.rarity = 'R';
     
     return p;
 }
@@ -357,6 +360,7 @@ Pokemon GetRandomUncommonPokemon(int playerPokemonLevel){
             break;
     }
     p.catchChancePercent = 40;
+    p.rarity = 'U';
     
     return p;
 }
@@ -468,9 +472,15 @@ Pokemon GetRandomCommonPokemon(int playerPokemonLevel){
             p.expWorth = 20 + p.level * 5;
             break;
     }
+    p.rarity = 'C';
+    
     p.catchChancePercent = 75;
     
     return p;
+}
+
+void PrintPokemon(Pokemon p){
+    printf("--------POKEMON--------\nNAME: %s\nLVL: %d\nHP: %d\nATT: %d\nDEF: %d\nRARITY: %c\n-----------------------\n", p.name, p.level, p.healthMax, p.attack, p.defence, p.rarity);
 }
 
 

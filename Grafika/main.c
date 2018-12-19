@@ -50,13 +50,13 @@ int main(int argc, char **argv)
     
     /* Testiranje */
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    printf("----STARTER POKEMON----\nNAME: %s\nLVL: %d\nHP: %d\nA: %d\nD: %d\n-----------------------\n", player.playerPokemon.name, player.playerPokemon.level, player.playerPokemon.healthMax, player.playerPokemon.attack, player.playerPokemon.defence);
+    PrintPokemon(player.playerPokemon);
     
     Pokemon x = GetRandomPokemon(player.playerPokemon.level);
-    printf("NAME: %s\nLVL: %d\nHP: %d\nA: %d\nD: %d\n", x.name, x.level, x.healthMax, x.attack, x.defence);
+    PrintPokemon(x);
     
     LevelUp(&player.playerPokemon);
-    printf("----STARTER POKEMON----\nNAME: %s\nLVL: %d\nHP: %d\nA: %d\nD: %d\n-----------------------\n", player.playerPokemon.name, player.playerPokemon.level, player.playerPokemon.healthMax, player.playerPokemon.attack, player.playerPokemon.defence);
+    PrintPokemon(player.playerPokemon);
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
     /* Inicijalizuje se GLUT. */
