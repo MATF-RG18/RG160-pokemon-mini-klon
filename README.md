@@ -24,7 +24,11 @@ v0.2.2
 
 v0.3
 - Napravljena klasa (ne bas posto je C) Pokemon
-- 32 Pokemona ubacena u igricu raspodeljenih po vrednosti (Common, Uncommon, Rare, Legendary)
+- 32 Pokemona ubacena u igricu raspodeljenih po retkosti (Common, Uncommon, Rare, Legendary)
 - Napravljene funkcije za napad pokemona, generisanje random pokemona (Legendary 1%, rare 9%, Uncommon 20%, Common 70%), proveru dal je objekat u PokemonField promenljivoj (poziva se na kraju hodanja igraca)
 - Leveling sistem Pokemona i njihovi statovi u odnosu na sam level
 - Sekcija za testiranje napravljenih funkcija u inicijalizaciji programa, ispis u konzoli funkcionalan trenutno
+
+v0.3.1
+- Funkcija za printovanje statova pokemona na standardni izlaz (bice pretvorena u iscrtavanje informacija o pokemonu kada dodjem do grafickog predstavljanja borbe)
+- Dodata promenljiva koja pokazuje retkost pokemona
