@@ -37,6 +37,10 @@ v0.3.2
 - Poboljsana kolizija sa krajem mape
 - Popravljen bag gde se proveravalo dal je igrac u PokemonField-u bez kretanja ako je igrac na ivicama ekrana (sad ne ulazi u hodanje uopste ako je to slucaj, tako da ne dolazi ni do provere kad se hodanje zavrsi)
 
+v0.4
+- Funkcije za loadovanje BMP slika
+- Sprite trave i glavnog lika
+- Bagovi sa BMP fajlovima exportovanim iz GIMP-a iz nekoga razloga (redosled kanala boja drugaciji, offset drugaciji)
 
 TODO:
 - Importovanje spritova za igraca, travu, pokemone
