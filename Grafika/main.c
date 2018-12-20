@@ -128,7 +128,7 @@ void InitializeSprites()
                  GL_RGBA, GL_UNSIGNED_BYTE, image->pixels);
 
     /* Kreira se druga tekstura. */
-    image_read(image, "grass1.bmp");
+    image_read(image, "grass.bmp");
 
     glBindTexture(GL_TEXTURE_2D, sprites[1]);
     glTexParameteri(GL_TEXTURE_2D,
