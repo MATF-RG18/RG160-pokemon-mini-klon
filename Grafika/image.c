@@ -87,7 +87,7 @@ void image_read(Image *image, char *filename) {
    * odgovarajuce duzine.
    */
   
-  printf("BITOVA: %d\nHEIGHT: %d\nWIDTH: %d\n", bih.bitcount, bih.height, bih.width);
+  printf("BITOVA: %d\nHEIGHT: %d\nOFFSET: %d\nWIDTH: %d\n", bih.bitcount, bih.height,bfh.offsetbits, bih.width);
   if (bih.bitcount == 24)
     image->pixels = (char *)malloc(3 * bih.width * bih.height * sizeof(char));
   else if (bih.bitcount == 32)
@@ -129,13 +129,20 @@ void image_read(Image *image, char *filename) {
       fread(&g, sizeof(char), 1, file);
       fread(&r, sizeof(char), 1, file);
       fread(&a, sizeof(char), 1, file);
-
+      
+      /* GIMP exporti
+      image->pixels[4 * i] = a;
+      image->pixels[4 * i + 1] = r;
+      image->pixels[4 * i + 2] = g;
+      image->pixels[4 * i + 3] = b;
+      */
+      
       image->pixels[4 * i] = r;
       image->pixels[4 * i + 1] = g;
       image->pixels[4 * i + 2] = b;
       image->pixels[4 * i + 3] = a;
       
-      printf("%d %d %d %d\n", r,g,b,a);
+
     }
 
   /* Zatvara se fajl. */

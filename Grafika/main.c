@@ -108,12 +108,13 @@ void InitializeSprites()
     image = image_init(0, 0);
 
     /* Kreira se prva tekstura. */
-    image_read(image, "character.bmp");
+    image_read(image, "character1.bmp");
 
     /* Generisu se identifikatori tekstura. */
-    glGenTextures(1, sprites);
+    glGenTextures(2, sprites);
 
     glBindTexture(GL_TEXTURE_2D, sprites[0]);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     glTexParameteri(GL_TEXTURE_2D,
                     GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D,
@@ -126,6 +127,20 @@ void InitializeSprites()
                  image->width, image->height, 0,
                  GL_RGBA, GL_UNSIGNED_BYTE, image->pixels);
 
+    /* Kreira se druga tekstura. */
+    image_read(image, "grass1.bmp");
+
+    glBindTexture(GL_TEXTURE_2D, sprites[1]);
+    glTexParameteri(GL_TEXTURE_2D,
+                    GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D,
+                    GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
+                 image->width, image->height, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, image->pixels);
+    
     /* Iskljucujemo aktivnu teksturu */
     glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -159,20 +174,32 @@ void reshape(int w, int h)
 void DrawGrass(int xStart, int yStart, int columns, int rows){
     int i, j;
     
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glColor3f(0,1,0);
+    
+    glBindTexture(GL_TEXTURE_2D, sprites[1]);
     for(i = 0; i < columns; i++)
     {
         for(j = 0; j < rows; j++)
         {
             glBegin(GL_QUADS);
+                glNormal3f(0, 0, 1);
+                
+                glTexCoord2f(0, 0);
                 glVertex2i(xStart + i*40, yStart + j*40);
+                
+                glTexCoord2f(1, 0);
                 glVertex2i(xStart + 40 + i*40, yStart + j*40);
+                
+                glTexCoord2f(1, 1);
                 glVertex2i(xStart + 40 + i*40, yStart + 40 + j*40);
+                
+                glTexCoord2f(0, 1);
                 glVertex2i(xStart + i*40, yStart + 40 + j*40);
             glEnd();
         }
     }
+    glBindTexture(GL_TEXTURE_2D, 0);
     
     pf.xBegin = xStart;
     pf.xEnd = xStart + 40*columns;
@@ -199,16 +226,16 @@ void DrawPlayer(){
         glNormal3f(0, 0, 1);
 
         glTexCoord2f(0, 0);
-        glVertex3f(player.xPos, player.yPos, 0);
+        glVertex2i(player.xPos, player.yPos);
 
         glTexCoord2f(1, 0);
-        glVertex3f(player.xPos+40, player.yPos, 0);
+        glVertex2i(player.xPos+40, player.yPos);
 
         glTexCoord2f(1, 1);
-        glVertex3f(player.xPos+40, player.yPos+40, 0);
+        glVertex2i(player.xPos+40, player.yPos+40);
 
         glTexCoord2f(0, 1);
-        glVertex3f(player.xPos, player.yPos+40, 0);
+        glVertex2i(player.xPos, player.yPos+40);
     glEnd();
     glBindTexture(GL_TEXTURE_2D, 0);
     
