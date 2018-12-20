@@ -2,6 +2,7 @@
 #include "pokemon.h"
 #include <stdio.h>
 #include <time.h>
+#include "image.h"
 
 #define UP 0
 #define DOWN 1
@@ -29,10 +30,12 @@ void reshape(int,int);
 void on_keyboard(unsigned char key, int x, int y);
 void SpecialInput(int key, int x, int y);
 void Walk(int dir);
+void InitializeSprites();
 
 void DrawGrass(int,int,int,int);
 void DrawPlayer();
 
+static GLuint sprites[2];
 int wOrtho = 800, hOrtho = 600;
 PokemonField pf;
 Player player;
@@ -71,8 +74,9 @@ int main(int argc, char **argv)
     glutDisplayFunc(render);
     glutKeyboardFunc(on_keyboard);
     glutSpecialFunc(SpecialInput);
-    
     glutReshapeFunc(reshape);
+    
+    InitializeSprites();
 
     /* Obavlja se OpenGL inicijalizacija. */
     glClearColor(0.3, 0.3, 0.3, 0);
@@ -83,6 +87,52 @@ int main(int argc, char **argv)
     return 0;
 }
 
+void InitializeSprites()
+{
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    /* Objekat koji predstavlja teskturu ucitanu iz fajla. */
+    Image * image;
+
+    /* Ukljucuju se teksture. */
+    glEnable(GL_TEXTURE_2D);
+
+    glTexEnvf(GL_TEXTURE_ENV,
+              GL_TEXTURE_ENV_MODE,
+              GL_REPLACE);
+
+    /*
+     * Inicijalizuje se objekat koji ce sadrzati teksture ucitane iz
+     * fajla.
+     */
+    image = image_init(0, 0);
+
+    /* Kreira se prva tekstura. */
+    image_read(image, "character.bmp");
+
+    /* Generisu se identifikatori tekstura. */
+    glGenTextures(1, sprites);
+
+    glBindTexture(GL_TEXTURE_2D, sprites[0]);
+    glTexParameteri(GL_TEXTURE_2D,
+                    GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D,
+                    GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D,
+                    GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D,
+                    GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
+                 image->width, image->height, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, image->pixels);
+
+    /* Iskljucujemo aktivnu teksturu */
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    /* Unistava se objekat za citanje tekstura iz fajla. */
+    image_done(image);
+}
+
 void render(void)
 {
     /* Brise se prethodni sadrzaj 'prozora'. */
@@ -90,7 +140,9 @@ void render(void)
     
     DrawGrass(wOrtho - 160, 0, 4, hOrtho/40);
     DrawPlayer();
-
+    
+    glBindTexture(GL_TEXTURE_2D, 0);
+    
     /* Nova slika se salje na ekran. */
     glutSwapBuffers();
 }
@@ -129,15 +181,36 @@ void DrawGrass(int xStart, int yStart, int columns, int rows){
 }
 
 void DrawPlayer(){
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    glColor3f(1,0,0);
     
+    glPolygonMode(GL_FRONT, GL_FILL);
+    //glColor3f(1,1,1);
+
+    /*
     glBegin(GL_POLYGON);
         glVertex2i(player.xPos, player.yPos);
         glVertex2i(player.xPos+40, player.yPos);
         glVertex2i(player.xPos+40, player.yPos+40);
         glVertex2i(player.xPos, player.yPos+40);
     glEnd();
+    */
+    
+    glBindTexture(GL_TEXTURE_2D, sprites[0]);
+    glBegin(GL_QUADS);
+        glNormal3f(0, 0, 1);
+
+        glTexCoord2f(0, 0);
+        glVertex3f(player.xPos, player.yPos, 0);
+
+        glTexCoord2f(1, 0);
+        glVertex3f(player.xPos+40, player.yPos, 0);
+
+        glTexCoord2f(1, 1);
+        glVertex3f(player.xPos+40, player.yPos+40, 0);
+
+        glTexCoord2f(0, 1);
+        glVertex3f(player.xPos, player.yPos+40, 0);
+    glEnd();
+    glBindTexture(GL_TEXTURE_2D, 0);
     
 }
 
