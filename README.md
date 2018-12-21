@@ -42,6 +42,12 @@ v0.4
 - Sprite trave i glavnog lika
 - Bagovi sa BMP fajlovima exportovanim iz GIMP-a iz nekoga razloga (redosled kanala boja drugaciji, offset drugaciji)
 
+v0.5
+- Napravljene BMP slike svih pokemona u igrici trenutno
+- Pokemon ima promenljivu "sprite" koja sadrzi njegovu sliku
+- Borbe pokemona, njena vizuelna predstava i funkcionalnost napada, na dugme space (treba helte iscrtavati, i napraviti na dnu ekrana prikaz mogucih akcija)
+- Idalje bag sa BMP fajlovima napravljenim u GIMP-u ............................................
+
 TODO:
 - Importovanje spritova za igraca, travu, pokemone
 - Borba, drugacije iscrtavanje za borbu, graficko predstavljanje pokemona u borbi i njihovih statova (Ime,helti,exp,level)
