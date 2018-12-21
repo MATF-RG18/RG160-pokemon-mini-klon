@@ -49,8 +49,8 @@ v0.5
 - Idalje bag sa BMP fajlovima napravljenim u GIMP-u ............................................
 
 TODO:
-- Importovanje spritova za igraca, travu, pokemone
-- Borba, drugacije iscrtavanje za borbu, graficko predstavljanje pokemona u borbi i njihovih statova (Ime,helti,exp,level)
+- Importovanje spritova za igraca, travu, pokemone √√√
+- Borba, drugacije iscrtavanje za borbu, graficko predstavljanje pokemona u borbi i njihovih statova (Ime,helti,exp,level) √√√
 - Promena trenutnog pokemona koj se koristi za nekog od uhvacenih
 - Pecanje (tu se dodaje onda jos pokemona)
 - Pokecentar za lecenje pokemona
