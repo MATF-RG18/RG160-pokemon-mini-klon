@@ -2,6 +2,9 @@
  * Dve strukture koje opisuju strukturu dva zaglavlja
  * kojima pocinje svaka slika u bmp formatu.
  */
+#ifndef HEADERFILE_H
+#define HEADERFILE_H
+
 typedef struct {
   unsigned short type;
   unsigned int size;
@@ -46,3 +49,4 @@ void image_done(Image *image);
  */
 void image_read(Image *image, char *filename);
 
+#endif

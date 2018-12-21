@@ -47,9 +47,6 @@ void PokemonAttack(Pokemon* playerPokemon, Pokemon* enemyPokemon){
     }
     else{
         playerPokemon->health -= enemyPokemon->attack;
-        if(playerPokemon->health <= 0){
-            PlayerPokemonFeinted();
-        }
     }
 }
 
@@ -58,6 +55,10 @@ void EnemyPokemonFeinted(Pokemon* a, Pokemon* b){
     if(a->exp >= a->expMax){
         LevelUp(a);
     }
+}
+
+void PokemonHeal(Pokemon* p){
+    p->health = p->healthMax;
 }
 
 void PlayerPokemonFeinted(){
@@ -90,23 +91,28 @@ Pokemon GetRandomPokemon(int playerPokemonLevel){
     Pokemon p;
     int randomNumber = rand()%100+1;
     
+    Image* image;
+    image = image_init(0, 0);
+    
     if(randomNumber <= 70){
-        p = GetRandomCommonPokemon(playerPokemonLevel);
+        p = GetRandomCommonPokemon(playerPokemonLevel,image);
     }
     else if(randomNumber <= 90){
-        p = GetRandomUncommonPokemon(playerPokemonLevel);
+        p = GetRandomUncommonPokemon(playerPokemonLevel,image);
     }
     else if(randomNumber <= 99){
-        p = GetRandomRarePokemon(playerPokemonLevel);
+        p = GetRandomRarePokemon(playerPokemonLevel,image);
     }
     else{
-        p = GetRandomLegendaryPokemon(playerPokemonLevel);
+        p = GetRandomLegendaryPokemon(playerPokemonLevel,image);
     }
+    
+    image_done(image);
     
     return p;
 }
 
-Pokemon GetRandomLegendaryPokemon(int playerPokemonLevel){
+Pokemon GetRandomLegendaryPokemon(int playerPokemonLevel, Image* image){
     Pokemon p;
     /* Od 19 do (sa)26 */
     int randomNumber = rand() % 5 + 27;
@@ -121,6 +127,7 @@ Pokemon GetRandomLegendaryPokemon(int playerPokemonLevel){
             p.attack = 6 + p.level * 2.5;
             p.defence = 6 + p.level * 2.5;
             p.expWorth = 100 + p.level * 20;
+            image_read(image, "PokemonSprites/Mewtwo.bmp");
             break;
         case ENTEI:
             p.name = "Entei";
@@ -131,6 +138,7 @@ Pokemon GetRandomLegendaryPokemon(int playerPokemonLevel){
             p.attack = 6 + p.level * 2.5;
             p.defence = 6 + p.level * 2.5;
             p.expWorth = 100 + p.level * 20;
+            image_read(image, "PokemonSprites/Entei.bmp");
             break;
         case RAIKOU:
             p.name = "Raikou";
@@ -141,6 +149,7 @@ Pokemon GetRandomLegendaryPokemon(int playerPokemonLevel){
             p.attack = 6 + p.level * 2.5;
             p.defence = 6 + p.level * 2.5;
             p.expWorth = 100 + p.level * 20;
+            image_read(image, "PokemonSprites/Raikou.bmp");
             break;
         case ARTICUNO:
             p.name = "Articuno";
@@ -151,6 +160,7 @@ Pokemon GetRandomLegendaryPokemon(int playerPokemonLevel){
             p.attack = 6 + p.level * 2.5;
             p.defence = 6 + p.level * 2.5;
             p.expWorth = 100 + p.level * 20;
+            image_read(image, "PokemonSprites/Articuno.bmp");
             break;
         case HOOH:
             p.name = "Ho-Oh";
@@ -161,15 +171,33 @@ Pokemon GetRandomLegendaryPokemon(int playerPokemonLevel){
             p.attack = 6 + p.level * 2.5;
             p.defence = 6 + p.level * 2.5;
             p.expWorth = 100 + p.level * 20;
+            image_read(image, "PokemonSprites/Hooh.bmp");
             break;
     }
     p.catchChancePercent = 5;
     p.rarity = 'L';
     
+    glGenTextures(1, &p.sprite);
+    glBindTexture(GL_TEXTURE_2D, p.sprite);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glTexParameteri(GL_TEXTURE_2D,
+                    GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D,
+                    GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D,
+                    GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D,
+                    GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
+                 image->width, image->height, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, image->pixels);
+    
+    glBindTexture(GL_TEXTURE_2D, 0);
+    
     return p;
 }
 
-Pokemon GetRandomRarePokemon(int playerPokemonLevel){
+Pokemon GetRandomRarePokemon(int playerPokemonLevel, Image* image){
     Pokemon p;
     /* Od 19 do (sa)26 */
     int randomNumber = rand() % 8 + 19;
@@ -184,6 +212,7 @@ Pokemon GetRandomRarePokemon(int playerPokemonLevel){
             p.attack = 6 + p.level * 2;
             p.defence = 6 + p.level * 2;
             p.expWorth = 40 + p.level * 10;
+            image_read(image, "PokemonSprites/Snorlax.bmp");
             break;
         case CHANSEY:
             p.name = "Chansey";
@@ -194,6 +223,7 @@ Pokemon GetRandomRarePokemon(int playerPokemonLevel){
             p.attack = 6 + p.level * 2;
             p.defence = 6 + p.level * 2;
             p.expWorth = 40 + p.level * 10;
+            image_read(image, "PokemonSprites/Chansey.bmp");
             break;
         case LAPRAS:
             p.name = "Lapras";
@@ -204,6 +234,7 @@ Pokemon GetRandomRarePokemon(int playerPokemonLevel){
             p.attack = 6 + p.level * 2;
             p.defence = 6 + p.level * 2;
             p.expWorth = 40 + p.level * 10;
+            image_read(image, "PokemonSprites/Lapras.bmp");
             break;
         case AERODACTYL:
             p.name = "Aerodactyl";
@@ -214,6 +245,7 @@ Pokemon GetRandomRarePokemon(int playerPokemonLevel){
             p.attack = 6 + p.level * 2;
             p.defence = 6 + p.level * 2;
             p.expWorth = 40 + p.level * 10;
+            image_read(image, "PokemonSprites/Aerodactyl.bmp");
             break;
         case DRATINI:
             p.name = "Dratini";
@@ -224,6 +256,7 @@ Pokemon GetRandomRarePokemon(int playerPokemonLevel){
             p.attack = 6 + p.level * 2;
             p.defence = 6 + p.level * 2;
             p.expWorth = 40 + p.level * 10;
+            image_read(image, "PokemonSprites/Dratini.bmp");
             break;
         case BULBASAUR:
             p.name = "Bulbasaur";
@@ -234,6 +267,7 @@ Pokemon GetRandomRarePokemon(int playerPokemonLevel){
             p.attack = 6 + p.level * 2;
             p.defence = 6 + p.level * 2;
             p.expWorth = 40 + p.level * 10;
+            image_read(image, "PokemonSprites/Bulbasaur.bmp");
             break;
         case CHARMANDER:
             p.name = "Charmander";
@@ -244,6 +278,7 @@ Pokemon GetRandomRarePokemon(int playerPokemonLevel){
             p.attack = 6 + p.level * 2;
             p.defence = 6 + p.level * 2;
             p.expWorth = 40 + p.level * 10;
+            image_read(image, "PokemonSprites/Charmander.bmp");
             break;
         case SQUIRTLE:
             p.name = "Squirtle";
@@ -254,15 +289,33 @@ Pokemon GetRandomRarePokemon(int playerPokemonLevel){
             p.attack = 6 + p.level * 2;
             p.defence = 6 + p.level * 2;
             p.expWorth = 40 + p.level * 10;
+            image_read(image, "PokemonSprites/Squirtle.bmp");
             break;
     }
     p.catchChancePercent = 20;
     p.rarity = 'R';
     
+    glGenTextures(1, &p.sprite);
+    glBindTexture(GL_TEXTURE_2D, p.sprite);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glTexParameteri(GL_TEXTURE_2D,
+                    GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D,
+                    GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D,
+                    GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D,
+                    GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
+                 image->width, image->height, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, image->pixels);
+    
+    glBindTexture(GL_TEXTURE_2D, 0);
+    
     return p;
 }
 
-Pokemon GetRandomUncommonPokemon(int playerPokemonLevel){
+Pokemon GetRandomUncommonPokemon(int playerPokemonLevel, Image* image){
     Pokemon p;
     /* Od 10 do (sa)18 */
     int randomNumber = rand() % 9 + 10;
@@ -277,6 +330,7 @@ Pokemon GetRandomUncommonPokemon(int playerPokemonLevel){
             p.attack = 5 + p.level * 1.5;
             p.defence = 4 + p.level * 1.5;
             p.expWorth = 30 + p.level * 7;
+            image_read(image, "PokemonSprites/Arcanine.bmp");
             break;
         case VULPIX:
             p.name = "Vulpix";
@@ -287,6 +341,7 @@ Pokemon GetRandomUncommonPokemon(int playerPokemonLevel){
             p.attack = 5 + p.level * 1.5;
             p.defence = 4 + p.level * 1.5;
             p.expWorth = 30 + p.level * 7;
+            image_read(image, "PokemonSprites/Vulpix.bmp");
             break;
         case ABRA:
             p.name = "Abra";
@@ -297,6 +352,7 @@ Pokemon GetRandomUncommonPokemon(int playerPokemonLevel){
             p.attack = 5 + p.level * 1.5;
             p.defence = 4 + p.level * 1.5;
             p.expWorth = 30 + p.level * 7;
+            image_read(image, "PokemonSprites/Abra.bmp");
             break;
         case ONYX:
             p.name = "Onyx";
@@ -307,6 +363,7 @@ Pokemon GetRandomUncommonPokemon(int playerPokemonLevel){
             p.attack = 5 + p.level * 1.5;
             p.defence = 4 + p.level * 1.5;
             p.expWorth = 30 + p.level * 7;
+            image_read(image, "PokemonSprites/Onyx.bmp");
             break;
         case GASTLY:
             p.name = "Gastly";
@@ -317,6 +374,7 @@ Pokemon GetRandomUncommonPokemon(int playerPokemonLevel){
             p.attack = 5 + p.level * 1.5;
             p.defence = 4 + p.level * 1.5;
             p.expWorth = 30 + p.level * 7;
+            image_read(image, "PokemonSprites/Gastly.bmp");
             break;
         case JYNX:
             p.name = "Jynx";
@@ -327,6 +385,7 @@ Pokemon GetRandomUncommonPokemon(int playerPokemonLevel){
             p.attack = 5 + p.level * 1.5;
             p.defence = 4 + p.level * 1.5;
             p.expWorth = 30 + p.level * 7;
+            image_read(image, "PokemonSprites/Jynx.bmp");
             break;
         case HORSEA:
             p.name = "Horsea";
@@ -337,6 +396,7 @@ Pokemon GetRandomUncommonPokemon(int playerPokemonLevel){
             p.attack = 5 + p.level * 1.5;
             p.defence = 4 + p.level * 1.5;
             p.expWorth = 30 + p.level * 7;
+            image_read(image, "PokemonSprites/Horsea.bmp");
             break;
         case JIGGLYPUFF:
             p.name = "Jigglypuff";
@@ -347,6 +407,7 @@ Pokemon GetRandomUncommonPokemon(int playerPokemonLevel){
             p.attack = 5 + p.level * 1.5;
             p.defence = 4 + p.level * 1.5;
             p.expWorth = 30 + p.level * 7;
+            image_read(image, "PokemonSprites/Jigglypuff.bmp");
             break;
         case SANDSHREW:
             p.name = "Sandshrew";
@@ -357,15 +418,33 @@ Pokemon GetRandomUncommonPokemon(int playerPokemonLevel){
             p.attack = 5 + p.level * 1.5;
             p.defence = 4 + p.level * 1.5;
             p.expWorth = 30 + p.level * 7;
+            image_read(image, "PokemonSprites/Sandshrew.bmp");
             break;
     }
     p.catchChancePercent = 40;
     p.rarity = 'U';
     
+    glGenTextures(1, &p.sprite);
+    glBindTexture(GL_TEXTURE_2D, p.sprite);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glTexParameteri(GL_TEXTURE_2D,
+                    GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D,
+                    GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D,
+                    GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D,
+                    GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
+                 image->width, image->height, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, image->pixels);
+    
+    glBindTexture(GL_TEXTURE_2D, 0);
+    
     return p;
 }
 
-Pokemon GetRandomCommonPokemon(int playerPokemonLevel){
+Pokemon GetRandomCommonPokemon(int playerPokemonLevel, Image* image){
     Pokemon p;
     /* Od 0 do (sa)9 */
     int randomNumber = rand()%10;
@@ -380,6 +459,7 @@ Pokemon GetRandomCommonPokemon(int playerPokemonLevel){
             p.attack = 3 + p.level;
             p.defence = 2 + p.level;
             p.expWorth = 20 + p.level * 5;
+            image_read(image, "PokemonSprites/Rattata.bmp");
             break;
         case GEODUDE:
             p.name = "Geodude";
@@ -390,6 +470,7 @@ Pokemon GetRandomCommonPokemon(int playerPokemonLevel){
             p.attack = 3 + p.level;
             p.defence = 2 + p.level;
             p.expWorth = 20 + p.level * 5;
+            image_read(image, "PokemonSprites/Geodude.bmp");
             break;
         case PIDGEY:
             p.name = "Pidgey";
@@ -400,6 +481,7 @@ Pokemon GetRandomCommonPokemon(int playerPokemonLevel){
             p.attack = 3 + p.level;
             p.defence = 2 + p.level;
             p.expWorth = 20 + p.level * 5;
+            image_read(image, "PokemonSprites/Pidgey.bmp");
             break;
         case BELLSPROUT:
             p.name = "Bellsprout";
@@ -410,6 +492,7 @@ Pokemon GetRandomCommonPokemon(int playerPokemonLevel){
             p.attack = 3 + p.level;
             p.defence = 2 + p.level;
             p.expWorth = 20 + p.level * 5;
+            image_read(image, "PokemonSprites/Bellsprout.bmp");
             break;
         case CATERPIE:
             p.name = "Caterpie";
@@ -420,6 +503,7 @@ Pokemon GetRandomCommonPokemon(int playerPokemonLevel){
             p.attack = 3 + p.level;
             p.defence = 2 + p.level;
             p.expWorth = 20 + p.level * 5;
+            image_read(image, "PokemonSprites/Caterpie.bmp");
             break;
         case WEEDLE:
             p.name = "Weedle";
@@ -430,6 +514,7 @@ Pokemon GetRandomCommonPokemon(int playerPokemonLevel){
             p.attack = 3 + p.level;
             p.defence = 2 + p.level;
             p.expWorth = 20 + p.level * 5;
+            image_read(image, "PokemonSprites/Weedle.bmp");
             break;
         case ZUBAT:
             p.name = "Zubat";
@@ -440,6 +525,7 @@ Pokemon GetRandomCommonPokemon(int playerPokemonLevel){
             p.attack = 3 + p.level;
             p.defence = 2 + p.level;
             p.expWorth = 20 + p.level * 5;
+            image_read(image, "PokemonSprites/Zubat.bmp");
             break;
         case ODISH:
             p.name = "Odish";
@@ -450,6 +536,7 @@ Pokemon GetRandomCommonPokemon(int playerPokemonLevel){
             p.attack = 3 + p.level;
             p.defence = 2 + p.level;
             p.expWorth = 20 + p.level * 5;
+            image_read(image, "PokemonSprites/Odish.bmp");
             break;
         case DROWZEE:
             p.name = "Drowzee";
@@ -460,6 +547,7 @@ Pokemon GetRandomCommonPokemon(int playerPokemonLevel){
             p.attack = 3 + p.level;
             p.defence = 2 + p.level;
             p.expWorth = 20 + p.level * 5;
+            image_read(image, "PokemonSprites/Drowzee.bmp");
             break;
         case EKANS:
             p.name = "Ekans";
@@ -470,17 +558,34 @@ Pokemon GetRandomCommonPokemon(int playerPokemonLevel){
             p.attack = 3 + p.level;
             p.defence = 2 + p.level;
             p.expWorth = 20 + p.level * 5;
+            image_read(image, "PokemonSprites/Ekans.bmp");
             break;
     }
     p.rarity = 'C';
-    
     p.catchChancePercent = 75;
+    
+    glGenTextures(1, &p.sprite);
+    glBindTexture(GL_TEXTURE_2D, p.sprite);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glTexParameteri(GL_TEXTURE_2D,
+                    GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D,
+                    GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D,
+                    GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D,
+                    GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
+                 image->width, image->height, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, image->pixels);
+    
+    glBindTexture(GL_TEXTURE_2D, 0);
     
     return p;
 }
 
 void PrintPokemon(Pokemon p){
-    printf("--------POKEMON--------\nNAME: %s\nLVL: %d\nHP: %d\nATT: %d\nDEF: %d\nRARITY: %c\n-----------------------\n", p.name, p.level, p.healthMax, p.attack, p.defence, p.rarity);
+    printf("--------POKEMON--------\nNAME: %s\nLVL: %d\nHP: %d\nATT: %d\nDEF: %d\nRARITY: %c\n-----------------------\n", p.name, p.level, p.health, p.attack, p.defence, p.rarity);
 }
 
 

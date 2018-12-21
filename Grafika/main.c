@@ -32,14 +32,20 @@ void SpecialInput(int key, int x, int y);
 void Walk(int dir);
 void InitializeSprites();
 
+void EngageEncounter();
+void DrawEnemyPokemon(int,int);
+void DrawPlayerPokemon(int,int);
 void DrawGrass(int,int,int,int);
 void DrawPlayer();
+void Tackle();
+void Respawn();
 
 static GLuint sprites[2];
 int wOrtho = 800, hOrtho = 600;
 PokemonField pf;
 Player player;
-int walking = 0;
+Pokemon enemyPokemon;
+int walking = false, battling = false;
 
 int main(int argc, char **argv)
 {
@@ -142,6 +148,22 @@ void InitializeSprites()
                  GL_RGBA, GL_UNSIGNED_BYTE, image->pixels);
     
     /* Iskljucujemo aktivnu teksturu */
+    
+    image_read(image, "PokemonSprites/Pikachu.bmp");
+    
+    glGenTextures(1, &player.playerPokemon.sprite);
+    
+    glBindTexture(GL_TEXTURE_2D, player.playerPokemon.sprite);
+    glTexParameteri(GL_TEXTURE_2D,
+                    GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D,
+                    GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
+                 image->width, image->height, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, image->pixels);
+    
     glBindTexture(GL_TEXTURE_2D, 0);
 
     /* Unistava se objekat za citanje tekstura iz fajla. */
@@ -153,9 +175,13 @@ void render(void)
     /* Brise se prethodni sadrzaj 'prozora'. */
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
-    DrawGrass(wOrtho - 160, 0, 4, hOrtho/40);
-    DrawPlayer();
-    
+    if(battling == false){
+        DrawGrass(wOrtho - 160, 0, 4, hOrtho/40);
+        DrawPlayer();
+    }else{
+        DrawEnemyPokemon(600,400);
+        DrawPlayerPokemon(200,100);
+    }
     glBindTexture(GL_TEXTURE_2D, 0);
     
     /* Nova slika se salje na ekran. */
@@ -169,6 +195,54 @@ void reshape(int w, int h)
     glLoadIdentity();
     gluOrtho2D(0,wOrtho,0,hOrtho+1);
     glMatrixMode(GL_MODELVIEW);
+}
+
+void DrawEnemyPokemon(int xPos, int yPos){
+    
+    glPolygonMode(GL_FRONT, GL_FILL);
+    
+    glBindTexture(GL_TEXTURE_2D, enemyPokemon.sprite);
+    glBegin(GL_QUADS);
+        glNormal3f(0, 0, 1);
+
+        glTexCoord2f(0, 0);
+        glVertex2i(xPos, yPos);
+
+        glTexCoord2f(1, 0);
+        glVertex2i(xPos+120, yPos);
+
+        glTexCoord2f(1, 1);
+        glVertex2i(xPos + 120, yPos + 120);
+
+        glTexCoord2f(0, 1);
+        glVertex2i(xPos, yPos + 120);
+    glEnd();
+    glBindTexture(GL_TEXTURE_2D, 0);
+    
+}
+
+void DrawPlayerPokemon(int xPos, int yPos){
+    
+    glPolygonMode(GL_FRONT, GL_FILL);
+    
+    glBindTexture(GL_TEXTURE_2D, player.playerPokemon.sprite);
+    glBegin(GL_QUADS);
+        glNormal3f(0, 0, 1);
+
+        glTexCoord2f(0, 0);
+        glVertex2i(xPos, yPos);
+
+        glTexCoord2f(1, 0);
+        glVertex2i(xPos+120, yPos);
+
+        glTexCoord2f(1, 1);
+        glVertex2i(xPos + 120, yPos + 120);
+
+        glTexCoord2f(0, 1);
+        glVertex2i(xPos, yPos + 120);
+    glEnd();
+    glBindTexture(GL_TEXTURE_2D, 0);
+    
 }
 
 void DrawGrass(int xStart, int yStart, int columns, int rows){
@@ -255,7 +329,7 @@ void SpecialInput(int key, int x, int y)
     {
         case GLUT_KEY_UP:
             /* Pokrece se Walk i direkcija je gore. */
-            if (!walking) {
+            if (!walking && !battling) {
                 player.yNewPos = player.yPos + 40;
                 if(player.yNewPos > 600-40)
                     player.yNewPos = 600-40;
@@ -265,7 +339,7 @@ void SpecialInput(int key, int x, int y)
             break;
         case GLUT_KEY_DOWN:
             /* Pokrece se Walk i direkcija je dole. */
-            if (!walking) {
+            if (!walking && !battling) {
                 player.yNewPos = player.yPos - 40;
                 if(player.yNewPos < 0)
                     player.yNewPos = 0;
@@ -275,7 +349,7 @@ void SpecialInput(int key, int x, int y)
             break;
         case GLUT_KEY_LEFT:
                 /* Pokrece se Walk i direkcija je levo. */
-            if (!walking) {
+            if (!walking && !battling) {
                 player.xNewPos = player.xPos - 40;
                 if(player.xNewPos < 0)
                     player.xNewPos = 0;
@@ -285,7 +359,7 @@ void SpecialInput(int key, int x, int y)
             break;
         case GLUT_KEY_RIGHT:
             /* Pokrece se Walk i direkcija je desno. */
-            if (!walking) {
+            if (!walking && !battling) {
                 player.xNewPos = player.xPos + 40;
                 if(player.xNewPos > 800-40)
                     player.xNewPos = 800-40;
@@ -303,10 +377,10 @@ void on_keyboard(unsigned char key, int x, int y)
         /* Zavrsava se program. */
         exit(0);
         break;
-
+    
     case 'w':
         /* Pokrece se Walk i direkcija je gore. */
-        if (!walking) {
+        if (!walking && !battling) {
             if(player.yPos == 600-40)
                 break;
             player.yNewPos = player.yPos + 40;
@@ -317,7 +391,7 @@ void on_keyboard(unsigned char key, int x, int y)
 
     case 's':
         /* Pokrece se Walk i direkcija je dole. */
-        if (!walking) {
+        if (!walking && !battling) {
             if(player.yPos == 0)
                 break;
             player.yNewPos = player.yPos - 40;
@@ -328,7 +402,7 @@ void on_keyboard(unsigned char key, int x, int y)
         
     case 'a':
         /* Pokrece se Walk i direkcija je levo. */
-        if (!walking) {
+        if (!walking && !battling) {
             if(player.xPos == 0)
                 break;
             player.xNewPos = player.xPos - 40;
@@ -339,13 +413,17 @@ void on_keyboard(unsigned char key, int x, int y)
         
     case 'd':
         /* Pokrece se Walk i direkcija je desno. */
-        if (!walking) {
+        if (!walking && !battling) {
             if(player.xPos == 800-40)
                 break;
             player.xNewPos = player.xPos + 40;
             walking = 1;
             glutTimerFunc(TIMER_INTERVAL, Walk, RIGHT);
         }
+        break;
+    case 32:
+        if(battling)
+            Tackle();
         break;
     }
 }
@@ -389,13 +467,48 @@ void Walk(int dir)
         glutTimerFunc(TIMER_INTERVAL, Walk, dir);
     }else{
         /* Provera dal je u PokemonField-u */
-        printf("%d\n",InPokemonField(player));
-        
         if(InPokemonField(player) == true){
-            // TODO: Random sansa za random encounter
+            /* Random sansa za random encounter */
+            int randomNumber = rand()%100+1;
+            
+            if(randomNumber <= 20){
+                EngageEncounter();
+            }
         }
     }
 }
+
+void EngageEncounter(){
+    enemyPokemon = GetRandomPokemon(player.playerPokemon.level);
+    
+    battling = true;
+}
+
+void Tackle(){
+    PokemonAttack(&player.playerPokemon, &enemyPokemon);
+    
+    PrintPokemon(enemyPokemon);
+    PrintPokemon(player.playerPokemon);
+    
+    if(enemyPokemon.health <= 0){
+        battling = false;
+    }
+    
+    if(player.playerPokemon.health <= 0){
+        battling = false;
+        Respawn();
+    }
+    
+    glutPostRedisplay();
+}
+
+void Respawn(){
+    player.xPos = wOrtho/2;
+    player.yPos = hOrtho/2-20;
+    player.dir = DOWN;
+    PokemonHeal(&player.playerPokemon);
+}
+
 
 
 

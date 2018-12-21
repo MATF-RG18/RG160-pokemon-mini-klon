@@ -1,17 +1,22 @@
+#include "image.h"
+#include <GL/glut.h>
+
 typedef struct Pokemon{
     int attack, defence, health, healthMax, level, exp, expWorth, expMax, catchChancePercent;
     char rarity;
     char* name;
+    GLuint sprite;
 }Pokemon;
 
-void PokemonAttack(Pokemon* playerPokemon, Pokemon* enemyPokemon);
-void EnemyPokemonFeinted(Pokemon* a, Pokemon* b);
+void PokemonAttack(Pokemon*, Pokemon*);
+void EnemyPokemonFeinted(Pokemon*, Pokemon*);
 void PlayerPokemonFeinted();
-void LevelUp(Pokemon* a);
+void LevelUp(Pokemon*);
 Pokemon MakeStarterPokemon();
 Pokemon GetRandomPokemon(int);
-Pokemon GetRandomCommonPokemon(int);
-Pokemon GetRandomUncommonPokemon(int);
-Pokemon GetRandomRarePokemon(int);
-Pokemon GetRandomLegendaryPokemon(int);
-void PrintPokemon(Pokemon p);
+Pokemon GetRandomCommonPokemon(int,Image*);
+Pokemon GetRandomUncommonPokemon(int,Image*);
+Pokemon GetRandomRarePokemon(int,Image*);
+Pokemon GetRandomLegendaryPokemon(int,Image*);
+void PrintPokemon(Pokemon);
+void PokemonHeal(Pokemon*);
