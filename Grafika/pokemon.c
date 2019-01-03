@@ -584,8 +584,79 @@ Pokemon GetRandomCommonPokemon(int playerPokemonLevel, Image* image){
     return p;
 }
 
+void AddPokemon(Pokemon* p, Pokemon roster[5]){
+    for(int i = 0; i < 5; i++){
+        //attack, defence, health, healthMax, level, exp, expWorth, expMax, catchChancePercent;char rarity;char* name;GLuint sprite;
+        if(strcmp(roster[i].name,"NULL") == 0){
+            roster[i].name = p->name;
+            roster[i].attack = p->attack;
+            roster[i].defence = p->defence;
+            roster[i].health = roster[i].healthMax = p->healthMax;
+            roster[i].level = p->level;
+            roster[i].exp = 0;
+            roster[i].expMax = p->expMax;
+            roster[i].rarity = p->rarity;
+            roster[i].sprite = p->sprite;
+            return;
+        }
+    }
+    
+    for(int i = 0; i < 5; i++){
+        printf("SLOT %d:\n", i);
+        PrintPokemon(roster[i]);
+    }
+    printf("NO MORE SPACE FOR POKEMON!\n");
+    // Send to PC
+}
+
+int PokemonInReserve(Pokemon roster[5]){
+    int i;
+    for(i = 0; i < 5; i++)
+    {
+        if(strcmp(roster[i].name,"NULL") == 0)
+            break;
+    }
+    return i;
+}
+
+void SwapPokemon(Pokemon* a, Pokemon* b){
+    Pokemon tmp;
+    tmp.name = b->name;
+    tmp.attack = b->attack;
+    tmp.defence = b->defence;
+    tmp.health = b->health;
+    tmp.healthMax = b->healthMax;
+    tmp.level = b->level;
+    tmp.exp = b->exp;
+    tmp.expMax = b->expMax;
+    tmp.rarity = b->rarity;
+    tmp.sprite = b->sprite;
+    
+    b->name = a->name;
+    b->attack = a->attack;
+    b->defence = a->defence;
+    b->health = a->health;
+    b->healthMax = a->healthMax;
+    b->level = a->level;
+    b->exp = a->exp;
+    b->expMax = a->expMax;
+    b->rarity = a->rarity;
+    b->sprite = a->sprite;
+    
+    a->name = tmp.name;
+    a->attack = tmp.attack;
+    a->defence = tmp.defence;
+    a->health = tmp.health;
+    a->healthMax = tmp.healthMax;
+    a->level = tmp.level;
+    a->exp = tmp.exp;
+    a->expMax = tmp.expMax;
+    a->rarity = tmp.rarity;
+    a->sprite = tmp.sprite;
+}
+
 void PrintPokemon(Pokemon p){
-    printf("--------POKEMON--------\nNAME: %s\nLVL: %d\nHP: %d\nATT: %d\nDEF: %d\nRARITY: %c\n-----------------------\n", p.name, p.level, p.health, p.attack, p.defence, p.rarity);
+    printf("--------POKEMON--------\nNAME: %s\nLVL: %d\nHP: %d\nATT: %d\nDEF: %d\nEXP: %d\nRARITY: %c\n-----------------------\n", p.name, p.level, p.health, p.attack, p.defence, p.exp, p.rarity);
 }
 
 

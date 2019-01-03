@@ -100,12 +100,13 @@ void image_read(Image *image, char *filename) {
   assert(image->pixels != NULL);
 
   /* Ucitavaju se podaci o pikselima i smestaju u alocirani niz. */
-  if (bih.bitcount == 24)
+  if (bih.bitcount == 24){
     /*
      * Ako se po pikselu cita 24 bita = 3 bajta informacija, pretpostavljamo 
      * da oni (ta 3 bajta) predstavljaju R, G i B komponentu boje (1 bajt po 
      * komponenti).
      */
+    printf("ODJE");
     for (i = 0; i < bih.width * bih.height; i++) {
       /*
        * Ovo mozda izgleda cudno, to sto se komponente boje citaju u suprotnom redosledu, 
@@ -119,7 +120,9 @@ void image_read(Image *image, char *filename) {
       image->pixels[3 * i + 1] = g;
       image->pixels[3 * i + 2] = b;
     }
-  else if (bih.bitcount == 32)
+  }
+  
+  else if (bih.bitcount == 32){
     /*
      * Ako se po pikselu cita 32 bita = 4 bajta informacija, pretpostavljamo 
      * da oni (ta 4 bajta) predstavljaju R, G, B i A komponentu boje (1 bajt po 
@@ -143,8 +146,8 @@ void image_read(Image *image, char *filename) {
       image->pixels[4 * i + 2] = b;
       image->pixels[4 * i + 3] = a;
       */
-
-    }
+      }
+  }
 
   /* Zatvara se fajl. */
   fclose(file);
