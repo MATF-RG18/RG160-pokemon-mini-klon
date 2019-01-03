@@ -2,12 +2,12 @@
 Pokemon mini klon
 
 x------------------------------------------------UPUTSTVO ZA IGRANJE IGRICE-----------------------------------------------x
-x
-x - W,A,S,D,↑,↓,→,← - Kretanje i navigacija menija
-x - Space - Tackle u borbi, Select u navigaciji menija
-x - Enter - Pauza/Nastavak, povratak u prethodni meni
-x - c - Pokusaj hvatanja pokemona
-x
+
+- W,A,S,D,↑,↓,→,← - Kretanje i navigacija menija
+- Space - Tackle u borbi, Select u navigaciji menija
+- Enter - Pauza/Nastavak, povratak u prethodni meni
+- c - Pokusaj hvatanja pokemona
+
 x-------------------------------------------------------------------------------------------------------------------------x
 
 v0.1
