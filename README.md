@@ -1,14 +1,14 @@
 # RG160-pokemon-mini-klon
 Pokemon mini klon
 
-------------------------------------------------UPUTSTVO ZA IGRANJE IGRICE----------------------------------------------
+x------------------------------------------------UPUTSTVO ZA IGRANJE IGRICE----------------------------------------------x
 
-W,A,S,D,↑,↓,→,← - Kretanje i navigacija menija
-Space - Tackle u borbi, Select u navigaciji menija
-Enter - Pauza/Nastavak, povratak u prethodni meni
-c - Pokusaj hvatanja pokemona
+- W,A,S,D,↑,↓,→,← - Kretanje i navigacija menija
+- Space - Tackle u borbi, Select u navigaciji menija
+- Enter - Pauza/Nastavak, povratak u prethodni meni
+- c - Pokusaj hvatanja pokemona
 
--------------------------------------------------------------------------------------------------------------------------
+x-------------------------------------------------------------------------------------------------------------------------x
 
 v0.1
 - Osnova programa
