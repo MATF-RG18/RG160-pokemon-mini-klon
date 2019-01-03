@@ -48,10 +48,16 @@ v0.5
 - Borbe pokemona, njena vizuelna predstava i funkcionalnost napada, na dugme space (treba helte iscrtavati, i napraviti na dnu ekrana prikaz mogucih akcija)
 - Idalje bag sa BMP fajlovima napravljenim u GIMP-u ............................................
 
+v0.6
+- Implementirano cuvanje uhvacenih pokemona (max 5 dodatnih)
+- Interaktivan meni na pritisak tastera Enter
+- Sekcija u meniju za pregled trenutnih Pokemona i menjanje koj se trenutno koristi
+- Idalje bag sa BMP fajlovima napravljenim u GIMP-u ............................................
+
 TODO:
 - Importovanje spritova za igraca, travu, pokemone √√√
 - Borba, drugacije iscrtavanje za borbu, graficko predstavljanje pokemona u borbi i njihovih statova (Ime,helti,exp,level) √√√
-- Promena trenutnog pokemona koj se koristi za nekog od uhvacenih
+- Promena trenutnog pokemona koj se koristi za nekog od uhvacenih √√√
 - Pecanje (tu se dodaje onda jos pokemona)
 - Pokecentar za lecenje pokemona
 - Balansiranje i menjanje statova za svakog pokemona ponaosob (za sad se statovi razlikuju samo po retkosti pokemona) (mozda skidanje formula sa bulbapedije, sajta sa svim informacijama o pokemon igricama)
