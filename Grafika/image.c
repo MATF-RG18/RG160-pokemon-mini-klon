@@ -106,7 +106,6 @@ void image_read(Image *image, char *filename) {
      * da oni (ta 3 bajta) predstavljaju R, G i B komponentu boje (1 bajt po 
      * komponenti).
      */
-    printf("ODJE");
     for (i = 0; i < bih.width * bih.height; i++) {
       /*
        * Ovo mozda izgleda cudno, to sto se komponente boje citaju u suprotnom redosledu, 

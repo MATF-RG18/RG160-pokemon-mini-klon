@@ -48,6 +48,7 @@ void PokemonAttack(Pokemon* playerPokemon, Pokemon* enemyPokemon){
     else{
         playerPokemon->health -= enemyPokemon->attack;
     }
+    enemyPokemon->catchChancePercent += playerPokemon->attack;
 }
 
 void EnemyPokemonFeinted(Pokemon* a, Pokemon* b){
@@ -617,6 +618,25 @@ int PokemonInReserve(Pokemon roster[5]){
             break;
     }
     return i;
+}
+
+void HealAllPokemon(Pokemon* p, Pokemon roster[5])
+{
+    int n = PokemonInReserve(roster);
+    
+    PokemonHeal(p);
+    
+    for(int i = 0; i < n; i++){
+        PokemonHeal(&roster[i]);
+    }
+}
+
+void ReleasePokemon(Pokemon roster[5], int index){
+    int n = PokemonInReserve(roster);
+    
+    if(n-1 != index)
+        SwapPokemon(&roster[index], &roster[n-1]);
+    roster[n-1].name = "NULL";
 }
 
 void SwapPokemon(Pokemon* a, Pokemon* b){

@@ -24,3 +24,5 @@ int PokemonInReserve(Pokemon[]);
 void SwapPokemon(Pokemon*, Pokemon*);
 void PrintPokemon(Pokemon);
 void PokemonHeal(Pokemon*);
+void HealAllPokemon(Pokemon*,Pokemon[]);
+void ReleasePokemon(Pokemon[],int);
