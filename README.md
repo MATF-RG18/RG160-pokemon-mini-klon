@@ -7,6 +7,7 @@ x------------------------------------------------UPUTSTVO ZA IGRANJE IGRICE-----
 - Space - Tackle u borbi, Select u navigaciji menija
 - Enter - Pauza/Nastavak, povratak u prethodni meni
 - c - Pokusaj hvatanja pokemona
+- r - Oslobadjanje pokemona u divljinu
 
 x----------------------------------------------------------------------------------------------------------------------------------x
 
@@ -63,12 +64,19 @@ v0.6
 - Sekcija u meniju za pregled trenutnih Pokemona i menjanje koj se trenutno koristi
 - Idalje bag sa BMP fajlovima napravljenim u GIMP-u ............................................
 
+v0.7
+- Ubacen Pokecentar, pritiskom tastera Space ispred njega healuju se svi pokemoni
+- Exp bar
+- Odradjen rad sa textom, helti/exp sada imaju brojcani prikaz
+- Oslobadjanje Pokemona iz rezerve u divljinu i otvaranje mesta za novog na taster R u odgovarajucem meniju
+- Unapredjen sistem borbe, ne izlazi automatski na kraju borbe iz te scene sad, vec se ceka pritisak Space tastera
+
 TODO:
 - Importovanje spritova za igraca, travu, pokemone √√√
 - Borba, drugacije iscrtavanje za borbu, graficko predstavljanje pokemona u borbi i njihovih statova (Ime,helti,exp,level) √√√
 - Promena trenutnog pokemona koj se koristi za nekog od uhvacenih √√√
 - Pecanje (tu se dodaje onda jos pokemona)
-- Pokecentar za lecenje pokemona
+- Pokecentar za lecenje pokemona √√√
 - Balansiranje i menjanje statova za svakog pokemona ponaosob (za sad se statovi razlikuju samo po retkosti pokemona) (mozda skidanje formula sa bulbapedije, sajta sa svim informacijama o pokemon igricama)
 - Zvukovi
 - Evolucije(?)
