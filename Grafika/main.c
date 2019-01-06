@@ -949,7 +949,7 @@ void on_keyboard(unsigned char key, int x, int y)
         break;
         
     case 'c':
-        if(battling && enemyPokemon.health > 0)
+        if(battling && enemyPokemon.health > 0 && player.playerPokemon.health > 0)
             ThrowPokeBall();
         break;
     
