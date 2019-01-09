@@ -1,6 +1,8 @@
 # RG160-pokemon-mini-klon
 Pokemon mini klon
 
+FOLDER U KOM SE NALAZI PROJEKAT SE ZOVE "GRAFIKA", SVI OSTALI FAJLOVI/FOLDERI VAN NJEGA SU KORISCENI ZA PREBACIVANJE SA WINDOWSA NA LINUX ILI SLICNIH STVARI!!!!!!!!!!!!!
+
 x------------------------------------------------UPUTSTVO ZA IGRANJE IGRICE-----------------------------------------------x
 
 - W,A,S,D,↑,↓,→,← - Kretanje i navigacija menija
