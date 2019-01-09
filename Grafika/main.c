@@ -127,7 +127,7 @@ void InitializeSprites()
     //glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     image = image_init(0, 0);
 
-    /* Kreira se prva tekstura. */
+    /* Kreira se player tekstura. */
     image_read(image, "character1.bmp");
 
     /* Generisu se identifikatori tekstura. */
@@ -147,7 +147,7 @@ void InitializeSprites()
                  image->width, image->height, 0,
                  GL_RGBA, GL_UNSIGNED_BYTE, image->pixels);
 
-    /* Kreira se druga tekstura. */
+    /* Kreira se trava tekstura */
     image_read(image, "grass.bmp");
 
     glBindTexture(GL_TEXTURE_2D, sprites[1]);
@@ -161,7 +161,7 @@ void InitializeSprites()
                  image->width, image->height, 0,
                  GL_RGBA, GL_UNSIGNED_BYTE, image->pixels);
     
-    /* Kreira se treca tekstura. */
+    /* Kreira se meni tekstura. */
     image_read(image, "Resources/menu.bmp");
     
     glBindTexture(GL_TEXTURE_2D, sprites[2]);
@@ -175,7 +175,7 @@ void InitializeSprites()
                  image->width, image->height, 0,
                  GL_RGB, GL_UNSIGNED_BYTE, image->pixels);
     
-    /* Kreira se cetvrta tekstura. */
+    /* Kreira se arrow tekstura. */
     image_read(image, "Resources/arrow.bmp");
     
     glBindTexture(GL_TEXTURE_2D, sprites[3]);
@@ -185,11 +185,11 @@ void InitializeSprites()
                     GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
                  image->width, image->height, 0,
-                 GL_RGB, GL_UNSIGNED_BYTE, image->pixels);
+                 GL_RGBA, GL_UNSIGNED_BYTE, image->pixels);
     
-    /* Kreira se peta tekstura. */
+    /* Kreira se pokecentar tekstura. */
     image_read(image, "Resources/Pokecenter.bmp");
     
     glBindTexture(GL_TEXTURE_2D, sprites[4]);
@@ -244,20 +244,31 @@ void render(void)
     /* Brise se prethodni sadrzaj 'prozora'. */
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
+    /* Text na dnu ekrana sa informacijama */
+    if(infoTextActive == true){
+        int n = strlen(infoText);
+        glColor3f(1,1,1);
+        font_style = GLUT_BITMAP_TIMES_ROMAN_24;
+        if(battling == false)
+            displayText(wOrtho/2 - n*8, 70, 1, 1, 1, infoText);
+        else
+            displayText(wOrtho/2 - n*8, 20, 1, 1, 1, infoText);
+    }
+    
+    /* Glavna scena */
     if(battling == false){
         DrawGrass(wOrtho - 160, 0, 4, hOrtho/40);
         DrawPokecenter();
         DrawPlayer();
-        if(infoTextActive == true){
-            int n = strlen(infoText);
-            glColor3f(1,1,1);
-            font_style = GLUT_BITMAP_TIMES_ROMAN_24;
-            displayText(wOrtho/2 - n*8, 70, 1, 1, 1, infoText);
-        }
-    }else{
+    }
+    
+    /* Borba */
+    else{
         DrawEnemyPokemon(600,360);
         DrawPlayerPokemon(200,140);
     }
+    
+    /* Meni */
     if(paused == true){
         DrawMenu();
     }
@@ -295,16 +306,16 @@ void DrawMenu(){
     glEnd();
     
     
-    int xArrow = 660, yArrow;
+    int xArrow = 650, yArrow;
     switch(arrowPos){
         case 0:
-            yArrow = 540;
+            yArrow = 544;
             break;
         case 1:
-            yArrow = 500;
+            yArrow = 506;
             break;
         case 2:
-            yArrow = 80;
+            yArrow = 78;
     }
     glBindTexture(GL_TEXTURE_2D, sprites[3]);
     glBegin(GL_QUADS);
@@ -435,21 +446,22 @@ void DrawPokemonMenu(){
         return;
     }
     
+    /* Draw pokemon selection arrow */
     glBindTexture(GL_TEXTURE_2D, sprites[3]);
     glBegin(GL_QUADS);
         glNormal3f(0, 0, 1);
 
         glTexCoord2f(0, 0);
-        glVertex2i(240, 520 - pokemonMenuArrowPos * 100);
+        glVertex2i(240, 520 - pokemonMenuArrowPos * 102);
 
         glTexCoord2f(1, 0);
-        glVertex2i(240 + 40, 520 - pokemonMenuArrowPos * 100);
+        glVertex2i(240 + 40, 520 - pokemonMenuArrowPos * 102);
 
         glTexCoord2f(1, 1);
-        glVertex2i(240 + 40, 520 - pokemonMenuArrowPos * 100 + 40);
+        glVertex2i(240 + 40, 520 - pokemonMenuArrowPos * 102 + 40);
 
         glTexCoord2f(0, 1);
-        glVertex2i(240, 520 - pokemonMenuArrowPos * 100 + 40);
+        glVertex2i(240, 520 - pokemonMenuArrowPos * 102 + 40);
     glEnd();
         
     
@@ -1072,6 +1084,7 @@ void UsePokecenter(){
 }
 
 void Tackle(){
+    infoTextActive = false;
     PokemonAttack(&player.playerPokemon, &enemyPokemon);
     
     PrintPokemon(enemyPokemon);
@@ -1090,6 +1103,12 @@ void Tackle(){
 }
 
 void ThrowPokeBall(){
+    if(PokemonInReserve(player.reservePokemon) == 5){
+        infoTextActive = true;
+        infoText = "POKEMON ROSTER IS FULL!";
+        glutPostRedisplay();
+        return;
+    }
     int randomNumber = rand()%100+1;
     
     if(randomNumber <= enemyPokemon.catchChancePercent){

@@ -73,7 +73,12 @@ void image_read(Image *image, char *filename) {
   fread(&bih.ypelspermeter, 4, 1, file);
   fread(&bih.colorsused, 4, 1, file);
   fread(&bih.colorsimportant, 4, 1, file);
-
+  
+  
+  /***** Najbitniji deo koda koj popravlja bag loseg ucitavanja GIMP sprajtova ******/
+  /**************/  fseek(file, bfh.offsetbits, SEEK_SET);   /***********************/
+  /**********************************************************************************/
+  
   /*
    * Od podataka iz drugog zaglavlja koristimo samo informacije
    * o dimenzijama slike.
