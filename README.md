@@ -71,6 +71,10 @@ v0.7
 - Oslobadjanje Pokemona iz rezerve u divljinu i otvaranje mesta za novog na taster R u odgovarajucem meniju
 - Unapredjen sistem borbe, ne izlazi automatski na kraju borbe iz te scene sad, vec se ceka pritisak Space tastera
 
+v0.8
+- Popravljen bag sa citanjem BMP fajlova koj je vredan cele jedne verzije za sebe
+- Zakljucano hvatanje pokemona ako je roster pun
+
 TODO:
 - Importovanje spritova za igraca, travu, pokemone √√√
 - Borba, drugacije iscrtavanje za borbu, graficko predstavljanje pokemona u borbi i njihovih statova (Ime,helti,exp,level) √√√
